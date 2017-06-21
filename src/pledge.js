@@ -31,6 +31,9 @@ Promises Workshop: build the pledge.js ES6-style promise library
    };
 
    this.then = function(fulfill, rej){
+     if (fulfill instanceof $Promise) {
+       return fulfill
+     }
      if (this._state === 'pending') {
       var newPromise = new $Promise(executor);
         this._handlerGroups.push({
@@ -51,15 +54,6 @@ Promises Workshop: build the pledge.js ES6-style promise library
       var funcObj = this._handlerGroups.shift();
       var downstreamValue;
       if (this._state === "fulfilled") {
-        // if (funcObj.successCb){
-        //    try {
-        //       var returnVal = funcObj.successCb(this._value);
-        //    } catch(err){
-        //       funcObj.downstreamPromise._internalReject(err);
-        //    }
-        //    funcObj.downstreamPromise._internalResolve(returnVal);
-        // }
-        // else funcObj.downstreamPromise._internalResolve(this._value); //no succesCb
         try{
           downstreamValue = (funcObj.successCb) ? (funcObj.successCb(this._value)) : this._value;
         } catch (err){
@@ -70,7 +64,7 @@ Promises Workshop: build the pledge.js ES6-style promise library
         if (funcObj.errorCb){
           try {
             var returnVal = funcObj.errorCb(this._value);
-          }catch(err){
+          } catch (err){
               funcObj.downstreamPromise._internalReject(err);
           }
           funcObj.downstreamPromise._internalResolve(returnVal);
