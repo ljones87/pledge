@@ -17,6 +17,7 @@ Promises Workshop: build the pledge.js ES6-style promise library
      if(this._state === 'pending'){
         this._state = 'fulfilled';
         if(!this.hasOwnProperty('_value'))this._value = data;
+        this._callHandlers();
       }
    };
 
@@ -25,6 +26,7 @@ Promises Workshop: build the pledge.js ES6-style promise library
       if(this._state === 'pending'){
         this._state = 'rejected';
         if(!this.hasOwnProperty('_value'))this._value = data;
+        this._callHandlers(data);
       }
    };
 
@@ -39,6 +41,13 @@ Promises Workshop: build the pledge.js ES6-style promise library
       }
    }
 
+   this._callHandlers = function(){
+    while(this._handlerGroups.length){
+      var funcObj = this._handlerGroups.shift();
+      console.log(funcObj);
+      funcObj.successCb(this._value); 
+    }
+   }
    var resolve = this._internalResolve.bind(this);
    var reject = this._internalReject.bind(this); //try with call later?
    executor(resolve, reject);
