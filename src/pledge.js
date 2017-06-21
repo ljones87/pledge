@@ -8,12 +8,19 @@ Promises Workshop: build the pledge.js ES6-style promise library
      throw new TypeError('executor is not a function');
    }
 
-   // if(executor === resolve)
-   executor(function (){}, function(){});
-   
+   function resolve(val){
+     console.log(val)
+   }
 
+   function reject(val){
+     console.log(val)
+   }
+
+   executor(resolve, reject);
 
    this._state = 'pending';
+
+
 
    this._internalResolve = function(data){
      if(this._state === 'pending'){
@@ -22,11 +29,12 @@ Promises Workshop: build the pledge.js ES6-style promise library
       }
    };
 
+
    this._internalReject = function(data){
       if(this._state === 'pending'){
         this._state = 'rejected';
-        if(!this.hasOwnProperty('_value'))this._value = data;        
-      } 
+        if(!this.hasOwnProperty('_value'))this._value = data;
+      }
    };
 
 
