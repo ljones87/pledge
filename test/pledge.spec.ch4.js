@@ -122,13 +122,13 @@ describe('For a given promiseA (pA)', function(){
     // Exceptions cause the returned promise to be rejected with the error.
     // Hint: you will need to use `try` & `catch` to make this work.
 
-    xit("if pA's success handler throws a reason `e`, pB is rejected with `e`", function (done) {
+    it("if pA's success handler throws a reason `e`, pB is rejected with `e`", function (done) {
       var promiseB = promiseA.then( thisThrowsShade );
       promiseA._internalResolve();
       expect( promiseB ).toRejectWith( 'shade', done );
     }, FAST_TIMEOUT);
 
-    xit("if pA's error handler throws a reason `e`, pB is rejected with `e`", function (done) {
+    it("if pA's error handler throws a reason `e`, pB is rejected with `e`", function (done) {
       var promiseB = promiseA.catch( thisThrowsShade );
       promiseA._internalReject();
       expect( promiseB ).toRejectWith( 'shade', done );
