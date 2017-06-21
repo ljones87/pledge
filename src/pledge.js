@@ -26,27 +26,33 @@ Promises Workshop: build the pledge.js ES6-style promise library
       if(this._state === 'pending'){
         this._state = 'rejected';
         if(!this.hasOwnProperty('_value'))this._value = data;
-        this._callHandlers(data);
+        this._callHandlers();
       }
    };
 
-   this.then = function(res, rej){
+   this.then = function(fulfill, rej){
      if (this._state === 'pending') {
         this._handlerGroups.push({
-          successCb : (typeof res === "function") ? res : null,
+          successCb : (typeof fulfill === "function") ? fulfill : null,
           errorCb : (typeof rej === "function") ? rej : null
         });
+      } else if (this._state === "fulfilled") {
+          fulfill(this._value);
       } else {
-        res(this._value);
+        if(rej) rej(this._value);
       }
    }
 
    this._callHandlers = function(){
     while(this._handlerGroups.length){
       var funcObj = this._handlerGroups.shift();
-      console.log(funcObj);
-      funcObj.successCb(this._value); 
+      if (this._state === "fulfilled") {
+        funcObj.successCb(this._value);
+      } else {
+        funcObj.errorCb(this._value);
+      }
     }
+
    }
    var resolve = this._internalResolve.bind(this);
    var reject = this._internalReject.bind(this); //try with call later?
