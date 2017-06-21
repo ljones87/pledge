@@ -136,19 +136,19 @@ describe('Another promise', function(){
 
     });
 
-    xit('can do stuff with fulfilled data', function(){
+    it('can do stuff with fulfilled data', function(){
       promiseForThing._internalResolve({ animal: 'duckling' });
       expect( ui.animals[2] ).toBe( 'duckling' );
     });
 
-    xit('can deal with rejection reasons', function(){
+    it('can deal with rejection reasons', function(){
       promiseForThing._internalReject({ message: 'unauthorized' });
       expect( ui.warning ).toBe( 'unauthorized' );
     });
 
     // Optional but recommended garbage collection
 
-    xit('discards handlers that are no longer needed', function(){
+    it('discards handlers that are no longer needed', function(){
       promiseForThing._internalResolve({ animal: 'chipmunk' });
       expect( promiseForThing._handlerGroups ).toEqual( [] );
     });
@@ -170,7 +170,7 @@ describe("A promise's `.catch` method", function(){
   });
   function myFunc (reason) { console.log(reason); }
 
-  xit('attaches the passed-in function as an error handler', function(){
+  it('attaches the passed-in function as an error handler', function(){
     promise.catch( myFunc );
     expect( promise.then ).toHaveBeenCalledWith( null, myFunc );
   });
@@ -180,7 +180,7 @@ describe("A promise's `.catch` method", function(){
   // If that happens, you will have to return here and fix `.catch` — this
   // time, taking the Ch. 4 specs into account.
 
-  xit('returns the same kind of thing that .then would', function(){
+  it('returns the same kind of thing that .then would', function(){
     var catchReturn = promise.catch( myFunc );
     var thenReturn = promise.then( null, myFunc );
     [catchReturn, thenReturn].forEach(sanitize);

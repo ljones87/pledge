@@ -32,10 +32,13 @@ Promises Workshop: build the pledge.js ES6-style promise library
 
    this.then = function(fulfill, rej){
      if (this._state === 'pending') {
+      var newPromise = new $Promise(executor);
         this._handlerGroups.push({
           successCb : (typeof fulfill === "function") ? fulfill : null,
-          errorCb : (typeof rej === "function") ? rej : null
+          errorCb : (typeof rej === "function") ? rej : null,
+          downstreamPromise : newPromise
         });
+        return newPromise;
       } else if (this._state === "fulfilled") {
           fulfill(this._value);
       } else {
@@ -53,6 +56,10 @@ Promises Workshop: build the pledge.js ES6-style promise library
       }
     }
 
+   }
+
+   this.catch = function(myFunc){
+    return this.then(null, myFunc);
    }
    var resolve = this._internalResolve.bind(this);
    var reject = this._internalReject.bind(this); //try with call later?
