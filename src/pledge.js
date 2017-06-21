@@ -49,18 +49,24 @@ Promises Workshop: build the pledge.js ES6-style promise library
    this._callHandlers = function(){
     while(this._handlerGroups.length){
       var funcObj = this._handlerGroups.shift();
-      var returnVal;
+      var downstreamValue;
       if (this._state === "fulfilled") {
-        if (funcObj.successCb){
-           try {
-           // var returnVal = funcObj.successCb(this._value);
-           } catch(err){
-              funcObj.downstreamPromise._internalReject(err);
-           }
-           funcObj.downstreamPromise._internalResolve(returnVal);
+        // if (funcObj.successCb){
+        //    try {
+        //       var returnVal = funcObj.successCb(this._value);
+        //    } catch(err){
+        //       funcObj.downstreamPromise._internalReject(err);
+        //    }
+        //    funcObj.downstreamPromise._internalResolve(returnVal);
+        // }
+        // else funcObj.downstreamPromise._internalResolve(this._value); //no succesCb
+        try{
+          downstreamValue = (funcObj.successCb) ? (funcObj.successCb(this._value)) : this._value;
+        } catch (err){
+          funcObj.downstreamPromise._internalReject(err);
         }
-        else funcObj.downstreamPromise._internalResolve(this._value);
-      } else {
+        funcObj.downstreamPromise._internalResolve(downstreamValue);
+      } else { //rejected
         if (funcObj.errorCb){
           try {
             var returnVal = funcObj.errorCb(this._value);
